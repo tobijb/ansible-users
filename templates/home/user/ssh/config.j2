@@ -1,0 +1,10 @@
+# This file is managed by Ansible, all changes will be lost
+
+{% for ssh_config in item.ssh_configs %}
+# Config: {{ ssh_config.name }}
+Host {{ ssh_config.config.hosts | join(' ') }}
+  IdentityFile ~/.ssh/{{ ssh_config.config.private_key_name }}
+  {% if ssh_config.config.options is defined %}
+  {{ ssh_config.config.options | join('\n') | indent(2) }}
+  {% endif %}
+{% endfor %}

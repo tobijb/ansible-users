@@ -104,3 +104,4 @@
   when: ((item.name is defined and item.name and item.name != 'root') and
          (item.state is defined and item.state == 'absent'))
 
+

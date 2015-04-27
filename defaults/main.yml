@@ -69,6 +69,26 @@ users_host_list: []
 #    # If account is removed, remove user's home directory as well
 #    remove: False/True
 
+# -- Example ssh config for user
+#    Comments inline. Everything is mandatory except ssh_configs -> options
+#    For reference of Hosts and Options see
+#       http://manpages.ubuntu.com/manpages/utopic/en/man5/ssh_config.5.html)
+#    !!!!! THIS SECTION OF YAML SHOULD ONLY EXIST IN AN ENCRYPTED VARS FILE !!!!!
+#    Use debops-padlock or ansible-vault!
+users_ssh_configs:
+  - name: 'username'                             # The user on the system to manage .ssh/config for 
+    ssh_configs:
+      - name: 'github ssh config'                # Arbitrary, just placed in the comments
+        config:
+          hosts: [ 'github.com' ]                # The hosts to use this key for 
+          private_key_name: 'key_for_github_com' # The key to use for the connection.  The key name should be defined below in the ssh_private_keys.
+          options: []                            # A list of option strings I.E. [ "User git" ].
+    ssh_private_keys:
+      - name: 'key_for_github_com'               # Private key name.  This results in a file in ~/.ssh/<name>.  This file is referenced above!
+        key: |                                   # Multiline block of text for the private key.  Put this in an encrypted yml file!
+          -----BEGIN RSA PRIVATE KEY-----
+          -----END RSA PRIVATE KEY-----
+
 
 # --- Global defaults ---
 

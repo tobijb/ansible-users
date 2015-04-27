@@ -15,6 +15,9 @@
 - include: sshkeys.yml
   when: users
 
+- include: ssh_configs.yml
+  when: users
+
 - include: dotfiles.yml
   when: users
   tags: users-dotfiles

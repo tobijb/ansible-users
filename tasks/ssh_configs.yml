@@ -1,0 +1,40 @@
+---
+
+# If this task is failing, you can uncomment no_log to see the error
+# Most common is that the item.name does not map to a real user on the system
+- name: Manage specific user config -- ssh directory
+  file:
+    path: '~{{ item.name }}/.ssh'
+    state: 'directory'
+    owner: '{{ item.name }}'
+    mode: '0700'
+  no_log: true
+  with_flattened:
+    - users_ssh_configs
+  when: (item.name is defined and item.name)
+
+- name: Manage specific user config -- SSH configs
+  template:
+    src: 'home/user/ssh/config.j2'
+    dest: '~{{ item.name }}/.ssh/config'
+    mode: '0600'
+    owner: '{{ item.name }}'
+  no_log: true
+  with_flattened:
+    - users_ssh_configs
+  when: ((item.name is defined and item.name) and 
+         (item.ssh_configs is defined and item.ssh_configs))
+
+- name: Manage specific user config -- SSH private keys
+  template:
+    src: 'home/user/ssh/private_key.j2'
+    dest: '~{{item.0.name}}/.ssh/{{item.1.name}}'
+    owner: '{{ item.0.name }}'
+    mode: '0600'
+  no_log: true
+  with_subelements:
+    - users_ssh_configs
+    - ssh_private_keys
+  when: (( item.0.name is defined and item.0.name ) and
+         ( item.1.name is defined and item.1.name ))
+
